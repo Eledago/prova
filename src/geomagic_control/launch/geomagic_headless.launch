@@ -1,0 +1,25 @@
+<launch>
+
+   <arg name="device_name" default="phantom"/>
+   <param name="publish_rate" type="int" value="100" />
+   
+ 
+   <group ns="$(arg device_name)">
+	<!-- omni node publishes joint states on omni1_joint_states -->
+        <node pkg="geomagic_control" name="set_torque" type="set_torque" output="screen" >
+            <param name="device_name" type="str" value="$(arg device_name)"/>
+            
+        </node>
+	
+	
+        
+        <param name="robot_description" command="cat $(find geomagic_description)/urdf/omni.urdf" />
+
+	<!-- robot_state_publisher reads Geomagic_joint_states and publishes corresponding tfs -->
+        <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher">
+	  <!--<remap from="joint_states" to="/joint_states" />-->
+	  <remap from="robot_description" to="robot_description" />
+	</node>
+	</group>
+</launch>
+
